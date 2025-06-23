@@ -22,6 +22,8 @@ def root_page():
 
 @app.get('/items', response_model= Dict)
 def get_all_item():
+    if not item_db:
+        raise HTTPException(status_code=403, detail="There is no item")
     return {"Items": item_db}
 
 @app.get('/item')
@@ -36,7 +38,8 @@ def search_item(item_id: int):
 @app.get('/search')
 def get_item(name: str):
     results = {id: item for id, item in item_db.items() if item.name.lower() == name.lower()}
-
+    if not results:
+        raise HTTPException(status_code=404, detail=f"No Item Found on this name '{name}'")
     return {"Results": results}
 
 @app.post('/item', response_model= Dict)
