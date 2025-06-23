@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import Optional
 
-item_db: dict[int, dict] = {}
+item_db: dict[int, dict] = {1: "dkljgf", 2: "dkjlghfl"}
 
 description = "In the Application you can search, upload, update and delete the Item's data."
 
