@@ -73,3 +73,6 @@ def delete_item(item_id: int):
     del item_db[item_id]
     return {"message": "Item deleted successfully"}
 
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("app:item_shop", reload=True)
