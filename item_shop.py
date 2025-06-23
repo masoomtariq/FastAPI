@@ -9,59 +9,67 @@ class Product(BaseModel):
     description: Optional[str] = None
     in_stock: bool = True
 
-# In-memory 'database'
+# In-memory 'database' using dictionary {item_id: Product}
 item_db: Dict[int, Product] = {}
 
+# App metadata
 description = "In the Application you can search, upload, update and delete the Item's data."
-
 app = FastAPI(title="Item Store", description=description, version='1.0.0')
+
 
 @app.get('/')
 def root_page():
+    # Welcome message with app description
     return {"message": f"Welcome to the Item Store. {description}"}
 
-@app.get('/items', response_model= Dict)
+
+@app.get('/items')
 def get_all_item():
+    # Return all items or raise error if DB is empty
     if not item_db:
-        raise HTTPException(status_code=403, detail="There is no item")
+        raise HTTPException(status_code=404, detail="There is no item available.")
     return {"Items": item_db}
 
-@app.get('/item')
-def search_item(item_id: int):
-    if item_id not in item_db:
-        raise HTTPException(status_code=401, detail=f"The Given item id '{item_id}' not found.")
-    
-    item = item_db.get(item_id)
 
-    return {"message": "Your requested item has been found", "Item": item}
+@app.get('/item/{item_id}')
+def search_item(item_id: int):
+    # Search item by ID using path parameter
+    if item_id not in item_db:
+        raise HTTPException(status_code=404, detail=f"The item ID '{item_id}' was not found.")
+    return {"message": "Item found", "Item": item_db[item_id]}
+
 
 @app.get('/search')
 def get_item(name: str):
+    # Search item(s) by name (case-insensitive)
     results = {id: item for id, item in item_db.items() if item.name.lower() == name.lower()}
     if not results:
-        raise HTTPException(status_code=404, detail=f"No Item Found on this name '{name}'")
+        raise HTTPException(status_code=404, detail=f"No item found with the name '{name}'.")
     return {"Results": results}
 
-@app.post('/item', response_model= Dict)
-def add_item(item: Product) -> Dict:
-    item_id = len(item_db)+1
+
+@app.post('/item')
+def add_item(item: Product):
+    # Add a new item with auto-incremented ID
+    item_id = len(item_db) + 1
     item_db[item_id] = item
     return {'id': item_id, "Item": item}
 
-@app.put('/item')
+
+@app.put('/item/{item_id}')
 def update_item(item_id: int, item: Product):
-    if item_id not in item_db:
-        raise HTTPException(404, detail="Item not found")
-
-    item_db[item_id] = item
-
-    return {"message": "Item updated", "Item": item}
-
-@app.delete('/delitem')
-def delete_item(item_id: int):
+    # Update item by ID if it exists
     if item_id not in item_db:
         raise HTTPException(status_code=404, detail="Item not found")
+    item_db[item_id] = item
+    return {"message": "Item updated successfully", "Item": item}
 
+
+@app.delete('/item/{item_id}')
+def delete_item(item_id: int):
+    # Delete item by ID if it exists
+    if item_id not in item_db:
+        raise HTTPException(status_code=404, detail="Item not found")
     del item_db[item_id]
-
     return {"message": "Item deleted successfully"}
+
