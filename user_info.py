@@ -66,7 +66,7 @@ def validate_user(login_info):
         raise HTTPException(status_code=401, detail=f"Username '{username}' not exist.")
 
     # Check password (access via attribute)
-    if users_db[username].password != login_info.password:
+    if users_db[username]["password"] != login_info.password:
         raise HTTPException(status_code=401, detail="Invalid password")
 
 # ------------------------------
@@ -155,4 +155,4 @@ def delete_user(login_info: LoginInfo):
 # ------------------------------
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("register_user:app", reload=True)
+    uvicorn.run("user_info:app", reload=True)
