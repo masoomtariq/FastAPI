@@ -35,7 +35,6 @@ class LoginInfo(BaseModel):
     username: str
     password: str
 
-
 # ------------------------------
 # POST route to register a user
 # ------------------------------
