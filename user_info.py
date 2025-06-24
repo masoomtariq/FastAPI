@@ -87,6 +87,8 @@ def update_info(username: str, user: LoginInfo):
     users_db[username] = user
     return {'message': "The user's information updated successfully!."}
     
+@app.delete('/delete')
+def delete_user()
 # ------------------------------
 # Uvicorn entry point for local run
 # ------------------------------
