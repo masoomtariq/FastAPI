@@ -59,15 +59,15 @@ def register_user(User: RegisterationInfo):
 # POST route for login
 # ------------------------------
 @app.post('/login')
-def login_user(user: LoginInfo):
+def login_user(login_info: LoginInfo):
 
-    username = user.username
+    username = login_info.username
     # Check if user exists
     if username not in users_db:
-        raise HTTPException(status_code=401, detail="Invalid username")
+        raise HTTPException(status_code=401, detail=f"Username '{username}' not exist.")
 
     # Check password (access via attribute)
-    if users_db[username].password != user.password:
+    if users_db[username].password != login_info.password:
         raise HTTPException(status_code=401, detail="Invalid password")
 
     return {"message": f"Welcome back, {username}!"}
@@ -80,6 +80,10 @@ def update_info(username: str, user: LoginInfo):
     if username not in users_db:
         raise HTTPException(status_code=404, detail=f"Username '{username}' not exist.")
     
+    # Check password (access via attribute)
+    if users_db[username].password != login_info.password:
+        raise HTTPException(status_code=401, detail="Invalid password")
+    
     users_db[username] = user
     return {'message': "The user's information updated successfully!."}
 
@@ -88,8 +92,16 @@ def update_info(username: str, user: LoginInfo):
 # ------------------------------
 @app.put('/change_password')
 def change_pass(login_info: LoginInfo, pass1: str, pass2: str):
-    
 
+    username = login_info.username
+    # Check if user exists
+    if username not in users_db:
+        raise HTTPException(status_code=401, detail="Invalid username")
+
+    # Check password (access via attribute)
+    if users_db[username].password != login_info.password:
+        raise HTTPException(status_code=401, detail="Invalid password")
+    
 # ------------------------------
 # Uvicorn entry point for local run
 # ------------------------------
