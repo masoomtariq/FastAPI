@@ -31,7 +31,7 @@ class RegisterationInfo(BaseModel):
 # ------------------------------
 # Pydantic model for user login
 # ------------------------------
-class LoginUser(BaseModel):
+class LoginInfo(BaseModel):
     username: str
     password: str
 
