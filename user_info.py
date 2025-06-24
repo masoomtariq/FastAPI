@@ -76,19 +76,32 @@ def login_user(login_info: LoginInfo):
 # PUT route for Update Information
 # ------------------------------
 @app.put('/update')
-def update_info(username: str, user: LoginInfo):
+def update_info(login_info: LoginInfo, user_info: RegisterationInfo):
+
+    username = login_info.username
+    # Check if user exists
     if username not in users_db:
-        raise HTTPException(status_code=404, detail=f"Username '{username}' not exist.")
-    
+        raise HTTPException(status_code=401, detail=f"Username '{username}' not exist.")
+
     # Check password (access via attribute)
     if users_db[username].password != login_info.password:
         raise HTTPException(status_code=401, detail="Invalid password")
     
-    users_db[username] = user
+    users_db[username] = user_info
     return {'message': "The user's information updated successfully!."}
     
 @app.delete('/delete')
-def delete_user()
+def delete_user(login_info: LoginInfo):
+
+    username = login_info.username
+    # Check if user exists
+    if username not in users_db:
+        raise HTTPException(status_code=401, detail=f"Username '{username}' not exist.")
+
+    # Check password (access via attribute)
+    if users_db[username].password != login_info.password:
+        raise HTTPException(status_code=401, detail="Invalid password")
+    
 # ------------------------------
 # Uvicorn entry point for local run
 # ------------------------------
