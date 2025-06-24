@@ -9,6 +9,22 @@ description = "This application specifically for practicing POST endpoints. It s
 # In-memory user database (key: username, value: user object)
 users_db: Dict[int, Dict] = {}
 
+##Models
+# ------------------------------
+# Pydantic model for user registration information
+# ------------------------------
+class RegisterationInfo(BaseModel):
+    username: str
+    email: EmailStr
+    full_name: str
+    password: str\
+# ------------------------------
+# Pydantic model for login Information
+# ------------------------------
+class LoginInfo(BaseModel):
+    username: str
+    password: str
+
 # Initialize FastAPI app
 app = FastAPI(title="Post_api", description=description, version="1.0.0")
 
@@ -19,27 +35,11 @@ app = FastAPI(title="Post_api", description=description, version="1.0.0")
 def root_page():
     return {"message": f"Welcome to the Homepage. {description}"}
 
-##Models
-# ------------------------------
-# Pydantic model for user registration
-# ------------------------------
-class RegisterationInfo(BaseModel):
-    username: str
-    email: EmailStr
-    full_name: str
-    password: str\
-# ------------------------------
-# Pydantic model for user login
-# ------------------------------
-class LoginInfo(BaseModel):
-    username: str
-    password: str
-
 # ------------------------------
 # POST route to register a user
 # ------------------------------
-@app.post('/register', response_model=dict)
-def register_user(User: RegisterUser) -> dict:
+@app.post('/register')
+def register_user(User: RegisterationInfo):
     username = User.username
 
     # Check for duplicate username
@@ -56,17 +56,10 @@ def register_user(User: RegisterUser) -> dict:
     }
 
 # ------------------------------
-# Pydantic model for user login
-# ------------------------------
-class LoginUser(BaseModel):
-    username: str
-    password: str
-
-# ------------------------------
 # POST route for login
 # ------------------------------
-@app.post('/login', response_model=dict)
-def login_user(user: LoginUser) -> dict:
+@app.post('/login')
+def login_user(user: LoginInfo):
 
     username = user.username
     # Check if user exists
