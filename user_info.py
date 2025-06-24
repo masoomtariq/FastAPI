@@ -121,9 +121,11 @@ def update_info(login_info: LoginInfo, user_info: UserInfo):
 
     validate_user(login_info)
     
-    username = login_info.username
+    username = user_info.username
     
-    users_db[username] = {"username": user_info.username,
+    del users_db[login_info.username]
+
+    users_db[username] = {"username": username,
                           "email": user_info.email,
                           "full_name": user_info.full_name,
                           "password": login_info.password}
