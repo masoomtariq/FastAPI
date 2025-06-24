@@ -30,12 +30,16 @@ class Password(BaseModel):
             raise ValueError("Password must contain at least one special character")
         return value
 # ------------------------------
-# Pydantic model for user registration information
+# Pydantic model for user information password excluded
 # ------------------------------
 class UserInfo(BaseModel):
     username: str
     email: EmailStr
     full_name: str
+# ------------------------------
+# Pydantic model For User Information Password included
+# ------------------------------
+class UserInfo_WithPass(UserInfo):
     password: Password
 # ------------------------------
 # Pydantic model for login Information
@@ -43,6 +47,14 @@ class UserInfo(BaseModel):
 class LoginInfo(BaseModel):
     username: str
     password: str
+# ------------------------------
+# Pydantic model to change Password
+# ------------------------------
+class ChangePassword(BaseModel):
+    email: EmailStr
+    old_password: str
+    new_password: Password
+    repeated_password: Password
 
 # Initialize FastAPI app
 app = FastAPI(title="Post_api", description=description, version="1.0.0")
@@ -58,7 +70,7 @@ def root_page():
 # POST route to register a user
 # ------------------------------
 @app.post('/register')
-def register_user(user: UserInfo):
+def register_user(user: UserInfo_WithPass):
     username = user.username
 
     # Check for duplicate username
@@ -106,9 +118,24 @@ def update_info(login_info: LoginInfo, user_info: UserInfo):
     if users_db[username].password != login_info.password:
         raise HTTPException(status_code=401, detail="Invalid password")
     
-    users_db[username] = user_info
-    return {'message': "The user's information updated successfully!."}
+    password = users_db[username]['password']
     
+    users_db[username] = {"username": user_info.username,
+                          "email": user_info.email,
+                          "full_name": user_info.full_name}
+    
+    return {'message': "The user's information updated successfully!."}
+
+# ------------------------------
+# PUT route for change Password
+# ------------------------------
+@app.put('/change_password')
+def change_password(user_info: ChangePassword):
+    
+
+# ------------------------------
+# DELETE route to delete user
+# ------------------------------
 @app.delete('/delete')
 def delete_user(login_info: LoginInfo):
 
