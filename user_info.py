@@ -86,21 +86,6 @@ def update_info(username: str, user: LoginInfo):
     
     users_db[username] = user
     return {'message': "The user's information updated successfully!."}
-
-# ------------------------------
-# PUT route for change Passward
-# ------------------------------
-@app.put('/change_password')
-def change_pass(login_info: LoginInfo, pass1: str, pass2: str):
-
-    username = login_info.username
-    # Check if user exists
-    if username not in users_db:
-        raise HTTPException(status_code=401, detail="Invalid username")
-
-    # Check password (access via attribute)
-    if users_db[username].password != login_info.password:
-        raise HTTPException(status_code=401, detail="Invalid password")
     
 # ------------------------------
 # Uvicorn entry point for local run
