@@ -73,6 +73,16 @@ def login_user(user: LoginInfo):
     return {"message": f"Welcome back, {username}!"}
 
 # ------------------------------
+# PUT route for Update Information
+# ------------------------------
+@app.put('/update')
+def update_info(username: str, user: LoginInfo):
+    if username not in users_db:
+        raise HTTPException(status_code=404, detail=f"Username '{username}' not exist.")
+    
+    users_db[username] = user
+    return {'message': "The user's information updated successfully!."}
+# ------------------------------
 # Uvicorn entry point for local run
 # ------------------------------
 if __name__ == "__main__":
