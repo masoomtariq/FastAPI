@@ -50,14 +50,23 @@ class LoginInfo(BaseModel):
 # ------------------------------
 # Pydantic model to change Password
 # ------------------------------
-class ChangePassword(BaseModel):
-    email: EmailStr
-    old_password: str
+class ChangePassword(LoginInfo):
     new_password: Password
     repeated_password: Password
 
 # Initialize FastAPI app
 app = FastAPI(title="Post_api", description=description, version="1.0.0")
+
+def validate_user(login_info):
+
+    username = login_info.username
+    # Check if user exists
+    if username not in users_db:
+        raise HTTPException(status_code=401, detail=f"Username '{username}' not exist.")
+
+    # Check password (access via attribute)
+    if users_db[username].password != login_info.password:
+        raise HTTPException(status_code=401, detail="Invalid password")
 
 # ------------------------------
 # Root Route
@@ -92,16 +101,9 @@ def register_user(user: UserInfo_WithPass):
 @app.post('/login')
 def login_user(login_info: LoginInfo):
 
-    username = login_info.username
-    # Check if user exists
-    if username not in users_db:
-        raise HTTPException(status_code=401, detail=f"Username '{username}' not exist.")
+    validate_user(login_info)
 
-    # Check password (access via attribute)
-    if users_db[username].password != login_info.password:
-        raise HTTPException(status_code=401, detail="Invalid password")
-
-    return {"message": f"Welcome back, {username}!"}
+    return {"message": f"Welcome back, {login_info.username}!"}
 
 # ------------------------------
 # PUT route for Update Information
@@ -109,20 +111,14 @@ def login_user(login_info: LoginInfo):
 @app.put('/update')
 def update_info(login_info: LoginInfo, user_info: UserInfo):
 
-    username = login_info.username
-    # Check if user exists
-    if username not in users_db:
-        raise HTTPException(status_code=401, detail=f"Username '{username}' not exist.")
-
-    # Check password (access via attribute)
-    if users_db[username].password != login_info.password:
-        raise HTTPException(status_code=401, detail="Invalid password")
+    validate_user(login_info)
     
-    password = users_db[username]['password']
+    username = login_info.username
     
     users_db[username] = {"username": user_info.username,
                           "email": user_info.email,
-                          "full_name": user_info.full_name}
+                          "full_name": user_info.full_name,
+                          "password": login_info.password}
     
     return {'message': "The user's information updated successfully!."}
 
@@ -131,7 +127,7 @@ def update_info(login_info: LoginInfo, user_info: UserInfo):
 # ------------------------------
 @app.put('/change_password')
 def change_password(user_info: ChangePassword):
-    
+    validate_user(user_info)
 
 # ------------------------------
 # DELETE route to delete user
@@ -139,18 +135,13 @@ def change_password(user_info: ChangePassword):
 @app.delete('/delete')
 def delete_user(login_info: LoginInfo):
 
-    username = login_info.username
-    # Check if user exists
-    if username not in users_db:
-        raise HTTPException(status_code=401, detail=f"Username '{username}' not exist.")
+    validate_user(login_info)
 
-    # Check password (access via attribute)
-    if users_db[username].password != login_info.password:
-        raise HTTPException(status_code=401, detail="Invalid password")
+    username = login_info.username
 
     del users_db[username]
 
-    return {"message": "The user '{username}' has been deleted."}
+    return {"message": f"The user '{username}' has been deleted."}
     
 # ------------------------------
 # Uvicorn entry point for local run
