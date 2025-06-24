@@ -142,7 +142,7 @@ def change_password(user_info: ChangePassword):
     if user_info.new_password != user_info.repeated_password:
         raise HTTPException(status_code=400, detail= "The Entered password must be match")
     
-    users_db[user_info.username]["password"] = user_info.new_password
+    users_db[user_info.username]["password"] = user_info.new_password.password
 
     return {"message": "The password has been changed successfully."}
 # ------------------------------
