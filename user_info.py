@@ -1,7 +1,7 @@
 # Import required modules from FastAPI and Pydantic
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, validator,EmailStr
-from typing import Optional, Dict
+from typing import Dict
 import re
 
 # App description shown in Swagger UI
@@ -88,12 +88,19 @@ def register_user(user: UserInfo_WithPass):
         raise HTTPException(status_code=400, detail=f"The given username '{username}' already exists.")
 
     # Save user (Pydantic model) to database
-    users_db[username] = user
+    users_db[username] = {"username": user.username,
+                          "email": user.email,
+                          "full_name": user.full_name,
+                          "password": user.password.password  # get string value
+                          }
 
     # Return success message, exclude password
     return {
         "message": f"User '{username}' registered successfully.",
-        "user": user.model_dump(exclude={"password"})  # Never return passwords
+        "user": {"username": user.username,
+                 "email": user.email,
+                 "full_name": user.full_name
+                 }  # Never return passwords
     }
 
 # ------------------------------
