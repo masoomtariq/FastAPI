@@ -2,6 +2,7 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, validator,EmailStr
 from typing import Optional, Dict
+import re
 
 # App description shown in Swagger UI
 description = "This application specifically for practicing POST endpoints. It supports user registration, login, updation and deletion, with duplicate username handling."
@@ -127,8 +128,14 @@ def update_info(login_info: LoginInfo, user_info: UserInfo):
 # ------------------------------
 @app.put('/change_password')
 def change_password(user_info: ChangePassword):
-    validate_user(user_info)
 
+    validate_user(user_info)
+    if user_info.new_password != user_info.repeated_password:
+        raise HTTPException(status_code=400, detail= "The Entered password must be match")
+    
+    users_db[user_info.username]["password"] = user_info.new_password
+
+    return {"message": "The password has been changed successfully."}
 # ------------------------------
 # DELETE route to delete user
 # ------------------------------
