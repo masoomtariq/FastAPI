@@ -82,6 +82,14 @@ def update_info(username: str, user: LoginInfo):
     
     users_db[username] = user
     return {'message': "The user's information updated successfully!."}
+
+# ------------------------------
+# PUT route for change Passward
+# ------------------------------
+@app.put('/change_password')
+def change_pass(login_info: LoginInfo, pass1: str, pass2: str):
+    
+
 # ------------------------------
 # Uvicorn entry point for local run
 # ------------------------------
