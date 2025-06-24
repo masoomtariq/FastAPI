@@ -101,6 +101,10 @@ def delete_user(login_info: LoginInfo):
     # Check password (access via attribute)
     if users_db[username].password != login_info.password:
         raise HTTPException(status_code=401, detail="Invalid password")
+
+    del users_db[username]
+
+    return {"message": "The user '{username}' has been deleted."}
     
 # ------------------------------
 # Uvicorn entry point for local run
