@@ -23,7 +23,7 @@ def root_page():
 # ------------------------------
 # Pydantic model for user registration
 # ------------------------------
-class RegisterUser(BaseModel):
+class RegisterationInfo(BaseModel):
     username: str
     email: EmailStr
     full_name: str
