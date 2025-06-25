@@ -31,6 +31,7 @@ def search_by_id(id: int):
 def search_by_title(title: str):
     results = {id: post for id, post in post_db.items() if post.title = title}
 
+
 @app.post('/blog_post/upload')
 def create_blog(blog : Blog):
     
