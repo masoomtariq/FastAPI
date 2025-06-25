@@ -29,7 +29,7 @@ def search_by_id(id: int):
 
 @app.get('/blog_post/{title}')
 def search_by_title(title: str):
-    results = {id: post for id, post in post_db.items() if post.title = title}
+    results = {id: post for id, post in post_db.items() if post.title == title}
 
     if not results:
         raise HTTPException(status_code=404, detail=f"No blog_post found on the Title '{title}'")
