@@ -47,7 +47,7 @@ def create_blog(blog : Blog):
     return {"message": "Post created", "post": response}
 
 @app.put('/blog_post/edit')
-def 
+def edit_blop(id: int, )
 
 if __name__ == "__main__":
     import uvicorn
