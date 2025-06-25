@@ -9,8 +9,11 @@ class Blog(BaseModel):
     tags : Optional[List[str]] = []
     published : bool = False
 
-class ResponseBlog(Blog):
+class CreatedBlog(Blog):
     created_at : datetime
+    
+class EditedBlog(CreatedBlog):
+    edited_at : datetime
 
 app = FastAPI(title="Blog Post", description="This is the api that is used to create a blog post", version='1.0.0')
 
@@ -40,7 +43,11 @@ def search_by_title(title: str):
 def create_blog(blog : Blog):
     
     id = len(post_db) + 1
-    response = ResponseBlog(title=blog.title, content=blog.content, tags=blog.tags, published=blog.published, created_at=datetime.utcnow())
+    response = CreatedBlog(title=blog.title,
+                            content=blog.content,
+                            tags=blog.tags,
+                            published=blog.published,
+                            created_at=datetime.utcnow())
 
     post_db[id] = response
 
