@@ -59,7 +59,7 @@ def create_blog(blog : Blog):
 @app.put('/blog_post/edit')
 def edit_blog(id: int, post: Blog):
     validate_id(id)
-    
+    created_time = 
 
 if __name__ == "__main__":
     import uvicorn
