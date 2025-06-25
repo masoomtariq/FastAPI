@@ -33,6 +33,8 @@ def search_by_title(title: str):
 
     if not results:
         raise HTTPException(status_code=404, detail=f"No blog_post found on the Title '{title}'")
+    
+    return {"message": f"The Blog_posts found on the Title '{title}'.", "Results": results}
 
 
 @app.post('/blog_post/upload')
