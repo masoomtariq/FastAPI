@@ -21,8 +21,12 @@ post_db : Dict[int, Dict] = {}
 def root_page():
     return {"message": "Welcome to the Homepage."}
 
-@app.get('/blog_post')
-def 
+@app.get('/blog_post/{id}')
+def search_by_id(id: int):
+    if not id in post_db:
+        raise HTTPException(status_code=404, detail="Invalid Id.")
+    
+    
 
 @app.post('/blog_post/upload')
 def create_blog(blog : Blog):
