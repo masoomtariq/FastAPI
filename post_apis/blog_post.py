@@ -3,14 +3,6 @@ from pydantic import BaseModel
 from typing import List, Optional
 from datetime import datetime
 
-app = FastAPI(title="Blog Post", description="This is the api that is used to create a blog post", version='1.0.0')
-
-post_db = []
-
-@app.get('/')
-def root_page():
-    return {"message": "Welcome to the Homepage."}
-
 class Blog(BaseModel):
     title : str
     content : str
@@ -21,7 +13,15 @@ class ResponseBlog(Blog):
     id : int
     created_at : datetime
 
-@app.post('/blog_post')
+app = FastAPI(title="Blog Post", description="This is the api that is used to create a blog post", version='1.0.0')
+
+post_db : 
+
+@app.get('/')
+def root_page():
+    return {"message": "Welcome to the Homepage."}
+
+@app.post('/blog_post/upload')
 def create_blog(blog : Blog):
 
     # if not blog.title or blog.content:
