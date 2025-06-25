@@ -55,7 +55,8 @@ def create_blog(blog : Blog):
 
 @app.put('/blog_post/edit')
 def edit_blog(id: int, post: Blog):
-
+    if id not in post_db:
+        raise HTTPException(status_code=404, detail="The Given Id is not found.")
 
 if __name__ == "__main__":
     import uvicorn
