@@ -10,7 +10,6 @@ class Blog(BaseModel):
     published : bool = False
 
 class ResponseBlog(Blog):
-    id : int
     created_at : datetime
 
 app = FastAPI(title="Blog Post", description="This is the api that is used to create a blog post", version='1.0.0')
@@ -26,18 +25,15 @@ def search_by_id(id: int):
     if not id in post_db:
         raise HTTPException(status_code=404, detail="Invalid Id.")
     
-    return {"message": }
+    return {"message": f"The blog_post has been found at the ID '{id}'", "Blog_post": post_db[id]}
 
 @app.post('/blog_post/upload')
 def create_blog(blog : Blog):
-
-    # if not blog.title or blog.content:
-    #     raise HTTPException(status_code=400, detail="Title and the content are required")
     
     id = len(post_db) + 1
     response = ResponseBlog(id = id, title=blog.title, content=blog.content, tags=blog.tags, published=blog.published, created_at=datetime.utcnow())
 
-    post_db.append(response)
+    post_db[id]
 
     return {"message": "Post created", "post": response}
 
