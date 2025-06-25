@@ -36,7 +36,6 @@ def search_by_title(title: str):
     
     return {"message": f"The Blog_posts found on the Title '{title}'.", "Results": results}
 
-
 @app.post('/blog_post/upload')
 def create_blog(blog : Blog):
     
@@ -46,6 +45,9 @@ def create_blog(blog : Blog):
     post_db[id] = response
 
     return {"message": "Post created", "post": response}
+
+@app.put('/blog_post/edit')
+def 
 
 if __name__ == "__main__":
     import uvicorn
