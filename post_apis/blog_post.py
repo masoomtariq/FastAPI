@@ -29,8 +29,7 @@ def root_page():
 
 @app.get('/blog_post/{id}')
 def search_by_id(id: int):
-    if id not in post_db:
-        raise HTTPException(status_code=404, detail="Invalid Id.")
+    validate_id(id)
     
     return {"message": f"The blog_post has been found at the ID '{id}'", "Blog_post": post_db[id]}
 
