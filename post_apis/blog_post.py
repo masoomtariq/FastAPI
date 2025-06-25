@@ -75,7 +75,9 @@ def edit_blog(id: int, post: Blog):
 def delete_post(id: int):
     validate_id(id)
 
-    
+    del post_db[id]
+
+    return {"message": "The Blog_post on the ID '{id}' has been deleted."}
 
 if __name__ == "__main__":
     import uvicorn
