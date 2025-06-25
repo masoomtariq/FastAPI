@@ -58,7 +58,7 @@ def create_blog(blog : Blog):
 
 @app.put('/blog_post/edit')
 def edit_blog(id: int, post: Blog):
-    
+
     validate_id(id)
     created_time = post_db[id].created_at
 
@@ -66,6 +66,10 @@ def edit_blog(id: int, post: Blog):
                              content=post.content,
                              tags=post.tags,
                              published=post.published)
+
+    post_db[id] = edited_post
+
+    return {"message": "Post created", "post": edited_post}
 
 if __name__ == "__main__":
     import uvicorn
