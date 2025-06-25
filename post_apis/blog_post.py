@@ -71,6 +71,10 @@ def edit_blog(id: int, post: Blog):
 
     return {"message": "Post created", "post": edited_post}
 
+@app.delete('/blog_post/delete')
+def delete_post(id: int):
+    
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("blog_post:app", reload=True)
