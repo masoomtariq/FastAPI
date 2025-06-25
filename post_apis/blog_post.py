@@ -19,6 +19,10 @@ app = FastAPI(title="Blog Post", description="This is the api that is used to cr
 
 post_db : Dict[int, Dict] = {}
 
+def validate_id(id):
+    if id not in post_db:
+        raise HTTPException(status_code=404, detail="Invalid Id.")
+
 @app.get('/')
 def root_page():
     return {"message": "Welcome to the Homepage."}
