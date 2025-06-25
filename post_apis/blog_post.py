@@ -65,7 +65,9 @@ def edit_blog(id: int, post: Blog):
     edited_post = EditedBlog(title=post.title,
                              content=post.content,
                              tags=post.tags,
-                             published=post.published)
+                             published=post.published,
+                             created_at=created_time,
+                             edited_at=datetime.utcnow())
 
     post_db[id] = edited_post
 
