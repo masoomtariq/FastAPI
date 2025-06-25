@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import Dict, List, Optional
 from datetime import datetime
 
 class Blog(BaseModel):
@@ -15,11 +15,14 @@ class ResponseBlog(Blog):
 
 app = FastAPI(title="Blog Post", description="This is the api that is used to create a blog post", version='1.0.0')
 
-post_db : 
+post_db : Dict[int, Dict] = {}
 
 @app.get('/')
 def root_page():
     return {"message": "Welcome to the Homepage."}
+
+@app.get('/blog_post')
+def 
 
 @app.post('/blog_post/upload')
 def create_blog(blog : Blog):
