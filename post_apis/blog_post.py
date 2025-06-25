@@ -73,7 +73,7 @@ def edit_blog(id: int, post: Blog):
 
 @app.delete('/blog_post/delete')
 def delete_post(id: int):
-    
+    validate_id(id)
 
 if __name__ == "__main__":
     import uvicorn
