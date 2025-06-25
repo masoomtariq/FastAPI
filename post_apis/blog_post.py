@@ -22,18 +22,22 @@ def root_page():
 
 @app.get('/blog_post/{id}')
 def search_by_id(id: int):
-    if not id in post_db:
+    if id not in post_db:
         raise HTTPException(status_code=404, detail="Invalid Id.")
     
     return {"message": f"The blog_post has been found at the ID '{id}'", "Blog_post": post_db[id]}
+
+@app.get('/blog_post/{title}')
+def search_by_title(title: str):
+    results = {id: post for id, post in post_db.items() if post.title = title}
 
 @app.post('/blog_post/upload')
 def create_blog(blog : Blog):
     
     id = len(post_db) + 1
-    response = ResponseBlog(id = id, title=blog.title, content=blog.content, tags=blog.tags, published=blog.published, created_at=datetime.utcnow())
+    response = ResponseBlog(title=blog.title, content=blog.content, tags=blog.tags, published=blog.published, created_at=datetime.utcnow())
 
-    post_db[id]
+    post_db[id] = response
 
     return {"message": "Post created", "post": response}
 
