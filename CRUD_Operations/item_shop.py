@@ -87,19 +87,20 @@ def add_item(item: Item):
 @app.put('/update_item/{item_id}')
 def update_item(item_id: int, item: Item):
     # Update item by ID if it exists
-    if item_id not in item_db:
-        raise HTTPException(status_code=404, detail="Item not found")
-    
-    validate_item(item)  # Validate item data before updating
+    validate_item_by_id(item_id)
+
+    # Validate item data before updating
+    validate_item_by_name_price(item)  
     # Update item in the database
     item_db[item_id] = item
     return {"message": "Item updated successfully", "Item": item}
 
 
-@app.delete('/item/{item_id}')
+@app.delete('/delete_item/{item_id}')
 def delete_item(item_id: int):
     # Delete item by ID if it exists
-    
+    validate_item_by_id(item_id)
+    # Remove item from the database
     del item_db[item_id]
     return {"message": "Item deleted successfully"}
 
