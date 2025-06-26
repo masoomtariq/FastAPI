@@ -4,4 +4,4 @@ items_data = {
     103: {"name": "Mouse", "price": 30},
 }
 
-print({"item": 101, **items_data[101]})
+print({**items_data})
