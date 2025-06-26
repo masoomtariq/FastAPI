@@ -4,4 +4,4 @@ items_data: Dict[int, Dict] = {
     103: {"name": "Mouse", "price": 30},
 }
 
-print({"101": **items_data[101]})
+print({"item": 101, **items_data[101]})
