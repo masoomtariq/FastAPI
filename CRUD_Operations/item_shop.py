@@ -62,8 +62,9 @@ def search_item(item_id: int):
 
 @app.get('/search/{name}', response_model=list[Item_with_id])
 def get_item(name: str):
-    
     # Search item(s) by name (case-insensitive)
+    # Using dictionary comprehension to filter items by name
+    # If no items found, raise HTTPException with 404 status code
     results = {id: item for id, item in item_db.items() if item.name.lower() == name.lower()}
     if not results:
         raise HTTPException(status_code=404, detail=f"No item found with the name '{name}'.")
