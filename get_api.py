@@ -55,7 +55,7 @@ def read_item1(item_id: int):
         raise HTTPException(status_code=404, detail=f"There is no item on this ID '{item_id}'")
     return {'message': f"The item founded at the index '{item_id}'", "Item": laptops[item_id]}
 
-@app.get("/Item_search")
+@app.get("/item_search")
 def read_item1(item_id: int):
     if item_id not in laptops.keys():
         raise HTTPException(status_code=404, detail=f"There is no item on this ID '{item_id}'")
