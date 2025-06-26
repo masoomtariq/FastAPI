@@ -16,6 +16,13 @@ class Item_with_id(Item):
 # In-memory 'database' using dictionary {item_id: Product}
 item_db: Dict[int, Item] = {}
 
+def validate_item(item: Item):
+    # Validate item data before adding or updating
+    if item.price < 0:
+        raise HTTPException(status_code=400, detail="Price cannot be negative.")
+    if not item.name:
+        raise HTTPException(status_code=400, detail="Item name cannot be empty.")
+
 # App metadata
 description = "In the Application you can search, upload, update and delete the Item's data."
 app = FastAPI(title="Item Store", description=description, version='1.0.0')
@@ -62,20 +69,15 @@ def add_item(item: Item):
     # Add a new item with auto-incremented ID
     item_id = max(item_db.keys(), default=0) + 1  # Get the next ID
 
-    # Check if item with the same name already exists (case-insensitive)
-    if any(existing_item.name.lower() == item.name.lower() for existing_item in item_db.values()):
-        raise HTTPException(status_code=400, detail=f"Item with name '{item.name}' already exists.")
-    
-    # Validate item data
-    if not item.name or item.price < 0:
-        raise HTTPException(status_code=400, detail="Invalid item data. Name cannot be empty and price must be non-negative.")
+    validate_item(item)  # Validate item data before adding
+
     # Add item to the database
     item_db[item_id] = item
-    return {'id': item_id, "Item": item}
+    return {"message": "Item added successfully", "Item": {"Id": item_id, **item.dict()}}
 
 
-@app.put('/item/{item_id}')
-def update_item(item_id: int, item: Product):
+@app.put('/update_item/{item_id}')
+def update_item(item_id: int, item: Item):
     # Update item by ID if it exists
     if item_id not in item_db:
         raise HTTPException(status_code=404, detail="Item not found")
