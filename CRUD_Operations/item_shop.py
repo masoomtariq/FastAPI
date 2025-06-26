@@ -83,4 +83,4 @@ def delete_item(item_id: int):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("app:item_shop", reload=True)
+    uvicorn.run("item_shop:app", reload=True)
