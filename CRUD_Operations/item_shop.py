@@ -57,7 +57,7 @@ def add_item(item: Product):
         raise HTTPException(status_code=400, detail=f"Item with name '{item.name}' already exists.")
     
     # Validate item data
-    if item.name or item.price < 0:
+    if not item.name or item.price < 0:
         raise HTTPException(status_code=400, detail="Invalid item data. Name cannot be empty and price must be non-negative.")
     # Add item to the database
     item_db[item_id] = item
