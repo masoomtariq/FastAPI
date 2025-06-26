@@ -64,4 +64,4 @@ def read_item1(item_id: int):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("get_endpoints:app", reload=True, port=8000)
+    uvicorn.run("get_api:app", reload=True, port=8000)
