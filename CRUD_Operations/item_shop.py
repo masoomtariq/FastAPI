@@ -19,7 +19,7 @@ item_db: Dict[int, Item] = {}
 def validate_item_by_id(item_id: int):
     # Validate item ID before searching or updating
     if item_id not in item_db:
-        raise HTTPException(status_code=404, detail="The item ID '{item_id}' was not found.")
+        raise HTTPException(status_code=404, detail=f"The item ID '{item_id}' was not found.")
 
 def validate_item_by_name_price(item: Item):
     # Validate item data before adding or updating
