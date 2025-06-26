@@ -23,6 +23,8 @@ def validate_item_by_id(item_id: int):
 
 def validate_item_by_name_price(item: Item):
     # Validate item data before adding or updating
+    if item.name.lower() not in [i.name.lower() for i in item_db.values()]:
+        raise HTTPException(status_code=400, detail="Item with this name already exists.")
     if item.price < 0:
         raise HTTPException(status_code=400, detail="Price cannot be negative.")
     if not item.name:
@@ -46,7 +48,7 @@ def get_all_item():
     # Using list comprehension to add IDs to each item
     # This is done to ensure the response model includes the ID field
     # as required by the Item_with_id model
-    return [{"Id": item_id, **item} for item_id, item in item_db.items()]
+    return [{"Id": item_id, **item.dict()} for item_id, item in item_db.items()]
 
 
 @app.get('/item/{item_id}', response_model=list[Item_with_id])
@@ -69,7 +71,7 @@ def get_item(name: str):
     if not results:
         raise HTTPException(status_code=404, detail=f"No item found with the name '{name}'.")
     # Return results with IDs
-    return [{"Id": id, **item} for id, item in results.items()]
+    return [{"Id": id, **item.dict()} for id, item in results.items()]
 
 
 @app.post('/item')
