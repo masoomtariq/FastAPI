@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from typing import List, Optional
 from datetime import datetime
 
-app = FastAPI(title="Blog Post", description="This is the api that is used to create a blog post", version='1.0.0')
+app = FastAPI(title="Blog Post", description="In this api's that is used to create a blog post", version='1.0.0')
 
 post_db = []
 
