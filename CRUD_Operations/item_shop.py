@@ -16,7 +16,12 @@ class Item_with_id(Item):
 # In-memory 'database' using dictionary {item_id: Product}
 item_db: Dict[int, Item] = {}
 
-def validate_item(item: Item):
+def validate_item_by_id(item_id: int):
+    # Validate item ID before searching or updating
+    if item_id not in item_db:
+        raise HTTPException(status_code=404, detail="The item ID '{item_id}' was not found.")
+
+def validate_item_by_name_price(item: Item):
     # Validate item data before adding or updating
     if item.price < 0:
         raise HTTPException(status_code=400, detail="Price cannot be negative.")
@@ -37,16 +42,17 @@ def get_all_item():
     # Return all items or raise error if DB is empty
     if not item_db:
         raise HTTPException(status_code=404, detail="There is no item available.")
-
-    
+    # Return all items with IDs
+    # Using list comprehension to add IDs to each item
+    # This is done to ensure the response model includes the ID field
+    # as required by the Item_with_id model
     return [{"Id": item_id, **item} for item_id, item in item_db.items()]
 
 
 @app.get('/item/{item_id}', response_model=list[Item_with_id])
 def search_item(item_id: int):
-    # Search item by ID using path parameter
-    if item_id not in item_db:
-        raise HTTPException(status_code=404, detail=f"The item ID '{item_id}' was not found.")
+    # Validate item ID before searching
+    validate_item_by_id(item_id)
     # Check if item is in stock
     if not item_db[item_id].in_stock:
         raise HTTPException(status_code=404, detail=f"The item ID '{item_id}' is not in stock.")
@@ -91,8 +97,7 @@ def update_item(item_id: int, item: Item):
 @app.delete('/item/{item_id}')
 def delete_item(item_id: int):
     # Delete item by ID if it exists
-    if item_id not in item_db:
-        raise HTTPException(status_code=404, detail="Item not found")
+    
     del item_db[item_id]
     return {"message": "Item deleted successfully"}
 
