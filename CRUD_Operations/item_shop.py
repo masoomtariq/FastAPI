@@ -51,7 +51,7 @@ def get_item(name: str):
 @app.post('/item')
 def add_item(item: Product):
     # Add a new item with auto-incremented ID
-    item_id = len(item_db) + 1
+    item_id = 
     item_db[item_id] = item
     return {'id': item_id, "Item": item}
 
