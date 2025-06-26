@@ -52,11 +52,14 @@ def get_item(name: str):
 def add_item(item: Product):
     # Add a new item with auto-incremented ID
     item_id = max(item_db.keys(), default=0) + 1  # Get the next ID
+    # Check if item with the same name already exists (case-insensitive)
     if any(existing_item.name.lower() == item.name.lower() for existing_item in item_db.values()):
         raise HTTPException(status_code=400, detail=f"Item with name '{item.name}' already exists.")
-    # Add item to the database
+    
+    # Validate item data
     if item.name or item.price < 0:
         raise HTTPException(status_code=400, detail="Invalid item data. Name cannot be empty and price must be non-negative.")
+    # Add item to the database
     item_db[item_id] = item
     return {'id': item_id, "Item": item}
 
