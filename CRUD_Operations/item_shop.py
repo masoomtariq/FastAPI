@@ -81,6 +81,9 @@ def update_item(item_id: int, item: Item):
     # Update item by ID if it exists
     if item_id not in item_db:
         raise HTTPException(status_code=404, detail="Item not found")
+    
+    validate_item(item)  # Validate item data before updating
+    # Update item in the database
     item_db[item_id] = item
     return {"message": "Item updated successfully", "Item": item}
 
