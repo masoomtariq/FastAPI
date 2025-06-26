@@ -62,6 +62,7 @@ def search_item(item_id: int):
 
 @app.get('/search/{name}', response_model=list[Item_with_id])
 def get_item(name: str):
+    
     # Search item(s) by name (case-insensitive)
     results = {id: item for id, item in item_db.items() if item.name.lower() == name.lower()}
     if not results:
