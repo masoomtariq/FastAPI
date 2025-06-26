@@ -77,7 +77,7 @@ def add_item(item: Item):
     # Add a new item with auto-incremented ID
     item_id = max(item_db.keys(), default=0) + 1  # Get the next ID
 
-    validate_item(item)  # Validate item data before adding
+    validate_item_by_name_price(item)  # Validate item data before adding
 
     # Add item to the database
     item_db[item_id] = item
