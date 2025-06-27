@@ -65,7 +65,7 @@ def validate_user(login_info):
     if username not in users_db:
         raise HTTPException(status_code=401, detail=f"Username '{username}' not exist.")
     
-    user_id = [for user_id, user in users_db.items() if user.username == username]
+    user_id = [user_id for user_id, user in users_db.items() if user.username == username]
     # Check password (access via attribute)
     if users_db[user_id]["password"] != login_info.password:
         raise HTTPException(status_code=401, detail="Invalid password")
