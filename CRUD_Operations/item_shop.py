@@ -95,7 +95,7 @@ def update_item(item_id: int, item: Item):
     validate_item_by_name_price(item)  
     # Update item in the database
     item_db[item_id] = item
-    return {"message": "Item updated successfully", "Item": item}
+    return {"message": "Item updated successfully", "Item": item_id, **item.dict()}
 
 
 @app.delete('/delete_item/{item_id}')
