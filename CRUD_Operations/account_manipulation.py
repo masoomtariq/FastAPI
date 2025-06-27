@@ -64,10 +64,9 @@ def validate_user(login_info):
     # Check if user exists
     if username not in users_db:
         raise HTTPException(status_code=401, detail=f"Username '{username}' not exist.")
-    
-    user_id = [user_id for user_id, user in users_db.items() if user.username == username][0]
+
     # Check password (access via attribute)
-    if users_db[user_id]["password"] != login_info.password:
+    if users_db[username]["password"] != login_info.password:
         raise HTTPException(status_code=401, detail="Invalid password")
 
 # ------------------------------
@@ -82,11 +81,10 @@ def root_page():
 # ------------------------------
 @app.post('/register')
 def register_user(user: UserInfo_WithPass):
-
-    user_id = max(users_db.keys(), default=0) + 1  # Get the next ID
+    username = user.username
 
     # Check for duplicate username
-    if user_id in users_db:
+    if username in users_db:
         raise HTTPException(status_code=400, detail=f"The given username '{username}' already exists.")
 
     # Save user (Pydantic model) to database
