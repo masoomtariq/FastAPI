@@ -23,7 +23,7 @@ def validate_item_by_id(item_id: int):
 
 def validate_item_by_name_price(item: Item):
     # Validate item data before adding or updating
-    if item.name.lower() not in [i.name.lower() for i in item_db.values()]:
+    if item.name.lower() in [i.name.lower() for i in item_db.values()]:
         raise HTTPException(status_code=400, detail="Item with this name already exists.")
     if item.price < 0:
         raise HTTPException(status_code=400, detail="Price cannot be negative.")
