@@ -85,7 +85,7 @@ def register_user(user: UserInfo_WithPass):
     user_id = max(users_db.keys(), default=0) + 1  # Get the next ID
 
     # Check for duplicate username
-    if username in users_db:
+    if user_id in users_db:
         raise HTTPException(status_code=400, detail=f"The given username '{username}' already exists.")
 
     # Save user (Pydantic model) to database
