@@ -39,7 +39,7 @@ def root_page():
     # Welcome message with app description
     return {"message": f"Welcome to the Item Store. {description}"}
 
-@app.get('/all_items', response_model=list[Item_with_id])
+@app.get('/all_items')
 def get_all_item():
     # Return all items or raise error if DB is empty
     if not item_db:
@@ -88,7 +88,7 @@ def add_item(item: Item):
 
 @app.put('/update_item/{item_id}')
 def update_item(item_id: int, item: Item):
-    
+
     del item_db[item_id]  # Remove item from the database if it exists
     # Update item by ID if it exists
     validate_item_by_id(item_id)
