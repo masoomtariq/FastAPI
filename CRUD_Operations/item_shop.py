@@ -51,7 +51,7 @@ def get_all_item():
     return [{"Id": item_id, **item.dict()} for item_id, item in item_db.items()]
 
 
-@app.get('/item/{item_id}', response_model=list[Item_with_id])
+@app.get('/item/{item_id}')
 def search_item(item_id: int):
     # Validate item ID before searching
     validate_item_by_id(item_id)
@@ -59,10 +59,10 @@ def search_item(item_id: int):
     if not item_db[item_id].in_stock:
         raise HTTPException(status_code=404, detail=f"The item ID '{item_id}' is not in stock.")
     
-    return [{"message": "Item found", "Item": item_id, **item_db[item_id]}]
+    return [{"message": "Item found", "Item": item_id, **item_db[item_id].dict()}]
 
 
-@app.get('/search/{name}', response_model=list[Item_with_id])
+@app.get('/search/{name}')
 def get_item(name: str):
     # Search item(s) by name (case-insensitive)
     # Using dictionary comprehension to filter items by name
@@ -92,7 +92,7 @@ def update_item(item_id: int, item: Item):
     validate_item_by_id(item_id)
 
     del item_db[item_id]  # Remove item from the database if it exists
-    
+
     # Validate item data before updating
     validate_item_by_name_price(item)  
     # Update item in the database
