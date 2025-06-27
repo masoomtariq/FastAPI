@@ -67,7 +67,7 @@ def validate_user(login_info):
     
     user_id = [for user_id, user in users_db.items() if user.username == username]
     # Check password (access via attribute)
-    if users_db[username]["password"] != login_info.password:
+    if users_db[user_id]["password"] != login_info.password:
         raise HTTPException(status_code=401, detail="Invalid password")
 
 # ------------------------------
