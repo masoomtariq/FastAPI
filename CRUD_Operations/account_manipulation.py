@@ -164,4 +164,4 @@ def delete_user(login_info: LoginInfo):
 # ------------------------------
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("user_info:app", reload=True)
+    uvicorn.run("account_manipulation:app", reload=True)
