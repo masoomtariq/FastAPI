@@ -88,6 +88,8 @@ def add_item(item: Item):
 
 @app.put('/update_item/{item_id}')
 def update_item(item_id: int, item: Item):
+    
+    del item_db[item_id]  # Remove item from the database if it exists
     # Update item by ID if it exists
     validate_item_by_id(item_id)
 
