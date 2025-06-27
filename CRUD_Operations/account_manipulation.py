@@ -81,7 +81,8 @@ def root_page():
 # ------------------------------
 @app.post('/register')
 def register_user(user: UserInfo_WithPass):
-    username = user.username
+
+    user_id = max(users_db.keys(), default=0) + 1  # Get the next ID
 
     # Check for duplicate username
     if username in users_db:
