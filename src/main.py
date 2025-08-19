@@ -1,2 +1,2 @@
-from pydantic import BaseModel, Field, valida
+from pydantic import BaseModel, Field
 from typing import List, Optional
