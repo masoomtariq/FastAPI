@@ -38,6 +38,7 @@ def update_data(id: Annotated[int, Field(..., gt=0, description="ID of the patie
     check_id(id)
 
     patient_data = data[id]
-    patient_data.update(patient.model_dump(exclude_unset=True))
+    patient_data.update(patient.model_dump())
 
-    for key, value in patient.model_dump(exclude_unset=True).items():
+    data[id] = patient_data
+    save_data(data)
