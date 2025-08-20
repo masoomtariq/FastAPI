@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException, responses
 from schemas import Patient, Annotated, Field
-from utils import data, save_data, counter, save_counter
+from utils import data, save_data, counter, save_counter, check_id
 
 app = FastAPI()
 
@@ -24,15 +24,17 @@ def view_data():
 
 @app.get("/view/{id}")
 def view_data_by_id(id: Annotated[int, Field(..., gt=0, description="ID of the patient to view", example=1)]):
+    
     global data
-
-    if id not in data:
-        raise HTTPException(status_code=404, detail="Patient not found")
+    check_id(id)
     
     return responses.JSONResponse(content={id: data[id]})
 
 @app.put("/update/{id}")
 def update_data(id: Annotated[int, Field(..., gt=0, description="ID of the patient to update", examples=[1, 2])],
                 patient: Annotated[Patient, Field(..., description="Updated patient data, can be one or more fields")]):
+    
     global data
+    check_id(id)
+
     

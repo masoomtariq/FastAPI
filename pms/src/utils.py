@@ -19,4 +19,6 @@ def check_id(id: int):
     """Check if the ID already exists in the data."""
     if id not in data:
         raise HTTPException(status_code=404, detail="Patient not found")
+    
+update_
 
