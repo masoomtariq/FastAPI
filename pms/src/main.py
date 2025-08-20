@@ -30,3 +30,14 @@ def view_data_by_id(id: Annotated[int, Field(..., gt=0, description="ID of the p
         raise HTTPException(status_code=404, detail="Patient not found")
     
     return responses.JSONResponse(content={id: data[id]})
+
+@app.put("/update/{id}")
+def update_data(id: Annotated[int, Field(..., gt=0, description="ID of the patient to update", example=1)], patient: Patient):
+    global data
+
+    if id not in data:
+        raise HTTPException(status_code=404, detail="Patient not found")
+    
+    data[id] = patient.model_dump(exclude=['id'])
+    save_data(data)
+    return responses.JSONResponse(content={"message": "Patient data updated successfully", "Id": id})
