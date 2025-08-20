@@ -52,5 +52,7 @@ def delete_data(id: Annotated[int, Field(..., gt=0, description="ID of the patie
 
     del data[id]
     save_data(data)
-    
+    counter -= 1
+    save_counter(counter)
+
     return responses.JSONResponse(content={"message": "Patient data deleted successfully", "Id": id}, status_code=200)  
