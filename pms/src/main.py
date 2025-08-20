@@ -38,7 +38,19 @@ def update_data(id: Annotated[int, Field(..., gt=0, description="ID of the patie
     check_id(id)
 
     patient_data = data[id]
-    patient_data.update(patient.model_dump())
+    patient_data.update(patient.model_dump(include=patient_data.keys()))
 
     data[id] = patient_data
     save_data(data)
+    return responses.JSONResponse(content={"message": "Patient data updated successfully", "Id": id}, status_code=201)
+
+@app.delete("/delete/{id}")
+def delete_data(id: Annotated[int, Field(..., gt=0, description="ID of the patient to delete", example=1)]):
+    
+    global data
+    check_id(id)
+
+    del data[id]
+    save_data(data)
+    
+    return responses.JSONResponse(content={"message": "Patient data deleted successfully", "Id": id}, status_code=200)  
