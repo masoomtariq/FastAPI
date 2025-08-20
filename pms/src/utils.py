@@ -21,4 +21,3 @@ def check_id(id: int):
         raise HTTPException(status_code=404, detail="Patient not found")
     
 
-
