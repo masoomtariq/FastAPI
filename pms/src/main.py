@@ -38,7 +38,7 @@ def update_data(id: Annotated[int, Field(..., gt=0, description="ID of the patie
     check_id(id)
 
     patient_data = data[id]
-    patient_data.update(patient.model_dump(include=patient_data.keys()))
+    patient_data.update(patient.model_dump(exclude=['id']))
 
     data[id] = patient_data
     save_data(data)
