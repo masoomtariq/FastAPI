@@ -20,5 +20,5 @@ def check_id(id: int):
     if id not in data:
         raise HTTPException(status_code=404, detail="Patient not found")
     
-update_
+
 
