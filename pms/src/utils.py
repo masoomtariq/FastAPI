@@ -31,12 +31,16 @@ order = {
     "Referred by a company": 3
 }
 
-def sort_key(item, sort_by):
-    """Helper function to sort data by a specific field."""
-    global data
-    
+def key_func(item, sort_by):
+    """Helper function to extract the sorting key from the item."""
     if not sort_by:
         return item[0]
     if sort_by == 'refered_by':
         return order[item[1].get('referred_by', 'Unknown')]
     return item[1].get(sort_by, item[0])
+
+def sort_data(sort_by, order):
+    """Helper function to sort data by a specific field."""
+    global data
+
+    return sorted(data.items(), key=lambda item: key_func(item, sort_by), reverse=(order == 'desc'))

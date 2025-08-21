@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException, responses
 from schemas import Patient, Field
 from typing import Annotated, Optional, Literal
-from utils import data, save_data, counter, save_counter, check_id, sort_key
+from utils import data, save_data, counter, save_counter, check_id, sort_data
 
 app = FastAPI()
 
@@ -24,7 +24,7 @@ def view_data(sort_by: Annotated[Literal['name', 'age', 'height', 'weight', 'bmi
     
     if not data:
         raise HTTPException(status_code=404, detail="No data found")
-    data = sorted(data.items(), key=sort_key(), reverse=(order == 'desc'))
+    data = sort_data(sort_by, order)
     return data
 
 @app.get("/view/{id}")
