@@ -33,6 +33,8 @@ order = {
 
 def sort_key(item, sort_by):
     """Helper function to sort data by a specific field."""
+    global data
+    
     if not sort_by:
         return item[0]
     if sort_by == 'refered_by':

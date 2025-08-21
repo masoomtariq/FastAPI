@@ -17,8 +17,8 @@ def add_data(patient: Patient):
     return responses.JSONResponse(content={"message": "Patient data added successfully", "Id": id}, status_code=201)
 
 @app.get("/view")
-def view_data(sort_by: Annotated[Optional[Literal['name', 'age', 'height', 'weight', 'bmi', 'refered_by']], Field(None, description="Sort the data by a specific field", example="name")],
-              order: Annotated[Optional[Literal['asc', 'desc']], Field('asc', description="Order of sorting", example="asc")]):
+def view_data(sort_by: Annotated[Literal['name', 'age', 'height', 'weight', 'bmi', 'refered_by'], Field(default=None, description="Sort the data by a specific field", example="name")],
+              order: Annotated[Literal['asc', 'desc'], Field(default='asc', description="Order of sorting", example="asc")]):
     
     global data
     
