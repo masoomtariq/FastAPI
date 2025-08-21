@@ -5,6 +5,15 @@ data_path = "patients.json"
 
 counter_path = "counter.txt"
 
+# Fallbacks in case files don't exist
+if not os.path.exists(data_path):
+    with open(data_path, 'w') as f:
+        json.dump({}, f)
+
+if not os.path.exists(counter_path):
+    with open(counter_path, 'w') as f:
+        f.write("0")
+
 with open(data_path, 'r') as file:
     data = json.load(file)
 
