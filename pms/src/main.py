@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException, responses
-from schemas import Patient, Annotated, Field
-from utils import data, save_data, counter, save_counter, check_id
+from schemas import Patient, Field
+from typing import Annotated, Optional, Literal
+from utils import data, save_data, counter, save_counter, check_id, sort_key
 
 app = FastAPI()
 
@@ -16,11 +17,15 @@ def add_data(patient: Patient):
     return responses.JSONResponse(content={"message": "Patient data added successfully", "Id": id}, status_code=201)
 
 @app.get("/view")
-def view_data():
+def view_data(sort_by: Annotated[Optional[Literal['name', 'age', 'height', 'weight', 'bmi', 'refered_by']], Field(None, description="Sort the data by a specific field", example="name")],
+              order: Annotated[Optional[Literal['asc', 'desc']], Field('asc', description="Order of sorting", example="asc")]):
+    
+    global data
     
     if not data:
         raise HTTPException(status_code=404, detail="No data found")
-    return responses.JSONResponse(content=data)
+    data = sorted(data.items(), key=sort_key(), reverse=(order == 'desc'))
+    return data
 
 @app.get("/view/{id}")
 def view_data_by_id(id: Annotated[int, Field(..., gt=0, description="ID of the patient to view", example=1)]):
@@ -28,7 +33,7 @@ def view_data_by_id(id: Annotated[int, Field(..., gt=0, description="ID of the p
     global data
     check_id(id)
     
-    return responses.JSONResponse(content={id: data[id]})
+    return {id: data[id]}
 
 @app.put("/update/{id}")
 def update_data(id: Annotated[int, Field(..., gt=0, description="ID of the patient to update", examples=[1, 2])],
@@ -50,9 +55,16 @@ def delete_data(id: Annotated[int, Field(..., gt=0, description="ID of the patie
     global data
     check_id(id)
 
+    global counter
     del data[id]
     save_data(data)
     counter -= 1
     save_counter(counter)
 
-    return responses.JSONResponse(content={"message": "Patient data deleted successfully", "Id": id}, status_code=200)  
+    return responses.JSONResponse(content={"message": "Patient data deleted successfully", "Id": id}, status_code=200) 
+
+
+# Run the app using Uvicorn (used for local development)
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("main:app", reload=True)

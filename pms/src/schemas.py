@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field, EmailStr, computed_field
-from typing import Optional, List, Annotated
+from typing import List, Annotated
 from utils import counter, save_counter
 
 class Patient(BaseModel):
@@ -14,6 +14,7 @@ class Patient(BaseModel):
     @property
     def id(self) -> int:
         """Automatically generated ID for the patient."""
+        global counter
         counter += 1
         save_counter(counter)
         return counter
@@ -57,3 +58,54 @@ class Patient(BaseModel):
             return "Referred by a company"
         else:
             return "Unknown"
+        
+    # class Config:
+    #     """Configuration for Pydantic model."""
+    #     json_schema_extra = {
+    #         "example": {
+    #             "name": "John Doe",
+    #             "email": "abc@gmail.com",
+    #             "age": 30,
+    #             "height": 1.75,
+    #             "weight": 70.5,
+    #             "allergies": ["Peanuts", "Penicillin"]
+    #         }
+    #     }
+    #     allow_population_by_field_name = True
+    #     use_enum_values = True
+    #     arbitrary_types_allowed = True
+    #     smart_union = True
+    #     validate_assignment = True
+    #     extra = "forbid"
+    #     anystr_strip_whitespace = True
+    #     min_anystr_length = 1
+    #     max_anystr_length = 100
+    #     json_encoders = {
+    #         float: lambda v: round(v, 2),
+    #         int: lambda v: int(v)
+    #     }
+    #     schema_extra = {
+    #         "title": "Patient",
+    #         "description": "Schema for patient data including personal information and health metrics."
+    #     }
+    #     allow_mutation = True
+    #     validate_all = True
+    #     validate_default = True
+    #     validate_assignment = True
+    #     validate_all = True
+    #     validate_default = True
+    #     validate_assignment = True
+    #     validate_all = True
+    #     validate_default = True
+    #     validate_assignment = True
+    #     validate_all = True
+    #     validate_default = True
+    #     validate_assignment = True
+    #     validate_all = True
+    #     validate_default = True
+    #     validate_assignment = True
+    #     validate_all = True
+    #     validate_default = True
+    #     validate_assignment = True
+    #     validate_all = True
+    #     validate_default = True
