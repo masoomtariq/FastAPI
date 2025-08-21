@@ -52,12 +52,9 @@ class Patient(BaseModel):
 
         if domain in common_domains:
             return "Amateur"
-        elif domain not in (common_domains + special_domains):
-            return "Professional"
-        elif domain in special_domains:
+        if domain in special_domains:
             return "Referred by a company"
-        else:
-            return "Unknown"
+        return "Professional"
         
     # class Config:
     #     """Configuration for Pydantic model."""
