@@ -25,6 +25,7 @@ def view_data(sort_by: Annotated[Literal['name', 'age', 'height', 'weight', 'bmi
     if not data:
         raise HTTPException(status_code=404, detail="No data found")
     data = sort_data(sort_by, order)
+    
     return data
 
 @app.get("/view/{id}")
