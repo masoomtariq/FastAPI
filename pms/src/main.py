@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, responses
+from fastapi import FastAPI, HTTPException, responses, Query
 from schemas import Patient, Field
 from typing import Annotated, Optional, Literal
 from utils import data, save_data, counter, save_counter, check_id, sort_data
@@ -7,37 +7,36 @@ app = FastAPI()
 
 @app.post("/add")
 def add_data(patient: Patient):
-    global data
 
+    global data
     id = patient.id
 
     data[id] = patient.model_dump(exclude=['id'])
-
     save_data(data)
+
     return responses.JSONResponse(content={"message": "Patient data added successfully", "Id": id}, status_code=201)
 
 @app.get("/view")
-def view_data(sort_by: Annotated[Literal['name', 'age', 'height', 'weight', 'bmi', 'refered_by'], Field(default=None, description="Sort the data by a specific field", example="name")],
-              order: Annotated[Literal['asc', 'desc'], Field(default='asc', description="Order of sorting", example="asc")]):
-    
-    global data
-    
+def view_data(
+    sort_by: Annotated[Optional[Literal['name', 'age', 'height', 'weight', 'bmi', 'refered_by']],
+                       Query(description="Sort the data by a specific field", example="name")] = None,
+    order: Annotated[Optional[Literal['asc', 'desc']],
+                     Query(description="Order of sorting", example="asc")] = "asc"):    
     if not data:
         raise HTTPException(status_code=404, detail="No data found")
-    data = sort_data(sort_by, order)
+    sorted_data = sort_data(sort_by, order)
 
-    return {i[0]: i[1] for i in data}
+    return {i[0]: i[1] for i in sorted_data}
 
 @app.get("/view/{id}")
-def view_data_by_id(id: Annotated[int, Field(..., gt=0, description="ID of the patient to view", example=1)]):
+def view_data_by_id(id: Annotated[str, Field(..., description="ID of the patient to view", example=1)]):
     
-    global data
     check_id(id)
     
     return {id: data[id]}
 
 @app.put("/update/{id}")
-def update_data(id: Annotated[int, Field(..., gt=0, description="ID of the patient to update", examples=[1, 2])],
+def update_data(id: Annotated[str, Field(..., description="ID of the patient to update", examples=[1, 2])],
                 patient: Annotated[Patient, Field(..., description="Updated patient data, can be one or more fields")]):
     
     global data
@@ -51,7 +50,7 @@ def update_data(id: Annotated[int, Field(..., gt=0, description="ID of the patie
     return responses.JSONResponse(content={"message": "Patient data updated successfully", "Id": id}, status_code=201)
 
 @app.delete("/delete/{id}")
-def delete_data(id: Annotated[int, Field(..., gt=0, description="ID of the patient to delete", example=1)]):
+def delete_data(id: Annotated[str, Field(..., description="ID of the patient to delete", example=1)]):
     
     global data
     check_id(id)
