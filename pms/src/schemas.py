@@ -1,14 +1,18 @@
-from pydantic import BaseModel, Field, EmailStr, computed_field
-from typing import List, Annotated
+from pydantic import BaseModel, Field, EmailStr, computed_field, model_validator
+from typing import List, Annotated, ClassVar
 from utils import counter, save_counter
 
 class Patient(BaseModel):
     name: Annotated[str, Field(..., max_length=50, description="Full name of the patient", example="John Doe")]
     email: Annotated[EmailStr, Field(..., description="Valid email address of the patient", example="abc@gmail.com")]
+    phone_no: Annotated[str, Field(..., description="Phone number of the patient", example="+1234567890")]
     age: Annotated[int, Field(..., gt=0, le=120, description="Age must be between 1 and 120", example=30)]
     height: Annotated[float, Field(..., gt=0, description="Height in meters", example=1.75)]
     weight: Annotated[float, Field(..., gt=0, description="Weight in kilograms", example=70.5)]
     allergies: Annotated[List[str], Field(default=None, max_length=5, description="List of allergies", example=["Peanuts", "Penicillin"])]
+
+    _emails: ClassVar[set[EmailStr]] = set()  # Class variable to track unique emails
+    _phones: ClassVar[set[str]] = set()  # Class variable to track unique phone numbers
 
     @computed_field
     @property
@@ -55,54 +59,20 @@ class Patient(BaseModel):
         if domain in special_domains:
             return "Referred by a company"
         return "Professional"
-        
-    # class Config:
-    #     """Configuration for Pydantic model."""
-    #     json_schema_extra = {
-    #         "example": {
-    #             "name": "John Doe",
-    #             "email": "abc@gmail.com",
-    #             "age": 30,
-    #             "height": 1.75,
-    #             "weight": 70.5,
-    #             "allergies": ["Peanuts", "Penicillin"]
-    #         }
-    #     }
-    #     allow_population_by_field_name = True
-    #     use_enum_values = True
-    #     arbitrary_types_allowed = True
-    #     smart_union = True
-    #     validate_assignment = True
-    #     extra = "forbid"
-    #     anystr_strip_whitespace = True
-    #     min_anystr_length = 1
-    #     max_anystr_length = 100
-    #     json_encoders = {
-    #         float: lambda v: round(v, 2),
-    #         int: lambda v: int(v)
-    #     }
-    #     schema_extra = {
-    #         "title": "Patient",
-    #         "description": "Schema for patient data including personal information and health metrics."
-    #     }
-    #     allow_mutation = True
-    #     validate_all = True
-    #     validate_default = True
-    #     validate_assignment = True
-    #     validate_all = True
-    #     validate_default = True
-    #     validate_assignment = True
-    #     validate_all = True
-    #     validate_default = True
-    #     validate_assignment = True
-    #     validate_all = True
-    #     validate_default = True
-    #     validate_assignment = True
-    #     validate_all = True
-    #     validate_default = True
-    #     validate_assignment = True
-    #     validate_all = True
-    #     validate_default = True
-    #     validate_assignment = True
-    #     validate_all = True
-    #     validate_default = True
+    
+    @model_validator(mode='after')
+    def check_uniqueness(self):
+
+        # Email uniqueness
+        if self.email in Patient._emails:
+            raise ValueError(f"Email '{self.email}' already exists")
+
+        # Phone uniqueness
+        if self.phone_no in Patient._phones:
+            raise ValueError(f"Phone_No '{self.phone_no}' already exists")
+
+        # Only update sets if everything is unique
+        Patient._emails.add(self.email)
+        Patient._phones.add(self.phone_no)
+
+        return self
