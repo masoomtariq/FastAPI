@@ -2,8 +2,8 @@ from fastapi import HTTPException
 import json
 import os
 
-data_path = "patients.json"
-counter_path = "counter.txt"
+data_path = "data/patients.json"
+counter_path = "data/counter.txt"
 
 # Fallbacks in case files don't exist
 if not os.path.exists(data_path):
