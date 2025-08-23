@@ -5,8 +5,6 @@ from utils import initialize_files, data, save_data, counter, save_counter, chec
 
 app = FastAPI(title="Patient Management System", version="0.1.0")
 
-initialize_files()
-
 @app.post("/add")
 def add_data(patient: Patient):
 
