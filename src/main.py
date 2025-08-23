@@ -1,9 +1,11 @@
 from fastapi import FastAPI, HTTPException, responses, Query
 from schemas import Patient, Field
 from typing import Annotated, Optional, Literal
-from utils import data, save_data, counter, save_counter, check_id, sort_data
+from utils import initialize_files, data, save_data, counter, save_counter, check_id, sort_data
 
-app = FastAPI()
+app = FastAPI(title="Patient Management System", version="0.1.0")
+
+initialize_files()
 
 @app.post("/add")
 def add_data(patient: Patient):
