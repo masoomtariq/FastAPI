@@ -1,8 +1,8 @@
 from fastapi import HTTPException
 import json
+import os
 
 data_path = "patients.json"
-
 counter_path = "counter.txt"
 
 # Fallbacks in case files don't exist
@@ -14,8 +14,11 @@ if not os.path.exists(counter_path):
     with open(counter_path, 'w') as f:
         f.write("0")
 
-with open(data_path, 'r') as file:
-    data = json.load(file)
+try:
+    with open(data_path, 'r') as file:
+        data = json.load(file)
+except json.decoder.JSONDecodeError:
+    data = {}
 
 def save_data(data):
     with open(data_path, 'w') as file:
@@ -30,6 +33,9 @@ def save_counter(counter):
 
 def check_id(id: int):
     """Check if the ID already exists in the data."""
+    if not data:
+        raise HTTPException(status_code=404, detail="No data found")
+    
     if id not in data:
         raise HTTPException(status_code=404, detail="Patient not found")
 
@@ -50,6 +56,6 @@ def key_func(item, sort_by):
 
 def sort_data(sort_by, order):
     """Helper function to sort data by a specific field."""
-    global data
 
-    return sorted(data.items(), key=lambda item: key_func(item, sort_by), reverse=(order == 'desc'))
+    sorted_data = sorted(data.items(), key=lambda item: key_func(item, sort_by), reverse=(order == 'desc'))
+    return sorted_data
